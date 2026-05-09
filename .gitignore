@@ -1,4 +1,4 @@
 node_modules/
 dist/
 outputs/
-*/flask_server.exe
+resources/backend/flask_server.exe
