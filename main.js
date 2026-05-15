@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog } = require('electron');
+const { app, BrowserWindow, dialog, Menu } = require('electron');
 const { spawn, execSync } = require('child_process');
 const path = require('path');
 const net = require('net');
@@ -8,12 +8,14 @@ let mainWindow = null;
 let isQuitting = false;
 
 function getBackendExe() {
+    const exeName = process.platform === "win32"
+        ? `flask_server.exe`
+        : 'flask_server';
+
     if (app.isPackaged) {
-        const exe = process.platform === 'win32' ? 'flask_server.exe' : 'flask_server';
-        return path.join(process.resourcesPath, 'backend', exe);
+        return path.join(process.resourcesPath, "backend", "flask_server", exeName);
     }
-    const exe = process.platform === 'win32' ? 'flask_server.exe' : 'flask_server';
-    return path.join(__dirname, '../backend/dist', exe);
+    return path.join(__dirname, "../backend/dist", "flask_server", exeName);
 }
 
 function getFreePort() {
@@ -99,9 +101,12 @@ function startBackend(port) {
 }
 
 async function createWindow() {
+    Menu.setApplicationMenu(null);
     mainWindow = new BrowserWindow({
         width: 1280,
         height: 820,
+        minWidth: 1000,
+        minHeight: 650,
         show: false,
         webPreferences: {
             nodeIntegration: false,
@@ -120,6 +125,7 @@ async function createWindow() {
         mainWindow.loadURL(`http://127.0.0.1:${port}`);
     } catch (err) {
         dialog.showErrorBox('Backend failed to start', err.message);
+        isQuitting = true;
         app.quit();
     }
 }
@@ -133,6 +139,8 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
 });
 
+
+// STARTING
 app.whenReady().then(createWindow);
 
 process.on('uncaughtException', (err) => {

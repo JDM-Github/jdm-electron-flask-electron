@@ -17,20 +17,19 @@
     "electron-builder": "^26.8.1"
   },
   "build": {
-    "appId": "com.jdm-flask-electron-template.app",
+    "appId": "com.jdm.jdm-electron-flask-template.app",
     "productName": "JDM | Flask & Electron Template",
     "directories": {
       "output": "dist"
     },
     "files": [
       "main.js",
-      "loading.html",
-      "build/icon.png"
+      "loading.html"
     ],
     "extraResources": [
       {
-        "from": "resources/backend",
-        "to": "backend",
+        "from": "resources/backend/flask_server",
+        "to": "backend/flask_server",
         "filter": [
           "**/*"
         ]
@@ -38,7 +37,7 @@
     ],
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico"
+      "icon": "resources/icon.ico"
     },
     "nsis": {
       "oneClick": false,
@@ -46,11 +45,11 @@
     },
     "mac": {
       "target": "dmg",
-      "icon": "build/icon.png"
+      "icon": "resources/icon.png"
     },
     "linux": {
       "target": "AppImage",
-      "icon": "build/icon.png"
+      "icon": "resources/icon.png"
     }
   }
 }
